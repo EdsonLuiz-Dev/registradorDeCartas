@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrador de Cartas</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -9,8 +10,11 @@
 
 <h1>Registrador de Cartas MTG</h1>
 
-<!-- Form to add a new card -->
+<!-- Formulário para adicionar ou editar uma carta -->
 <form id="cartaForm">
+    <!-- Campo oculto para o ID da carta, usado para edição -->
+    <input type="hidden" id="id">
+
     <input type="text" id="nome" placeholder="Nome" required>
     <input type="text" id="cmc" placeholder="CMC" required>
     <input type="text" id="cor" placeholder="Cor" required>
@@ -19,12 +23,15 @@
     <input type="number" id="poder" placeholder="Poder" required>
     <input type="number" id="resistencia" placeholder="Resistência" required>
 
+    <!-- Botão de Cadastrar ou Editar -->
     <button type="submit">Cadastrar Carta</button>
 </form>
 
 <hr>
 
+
 <h2>Cartas Registradas</h2>
+<!-- Lista das cartas registradas -->
 <ul id="listaCartas"></ul>
 
 <script src="script.js"></script>
