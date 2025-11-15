@@ -1,0 +1,14 @@
+target/
+*.log
+*.class
+*.jar
+*.war
+*.iml
+.idea/
+.project
+.classpath
+.settings/
+bin/
+.vscode/
+.DS_Store
+meu_banco_de_dados.db
