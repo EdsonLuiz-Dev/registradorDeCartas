@@ -23,6 +23,10 @@ public class registradorService {
         return repository.findById(id);
     }
 
+    public List<Carta> buscarPorNome(String nome) {
+        return repository.findByNomeContainingIgnoreCase(nome);
+    }
+
     public Carta salvar(Carta carta) {
         return repository.save(carta);
     }

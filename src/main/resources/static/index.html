@@ -1,38 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Registrador de Cartas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrador de Cartas MTG</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<h1>Registrador de Cartas</h1>
+<h1>Registrador de Cartas MTG</h1>
 
-<section class="main-container">
-	<form id="cartaForm">
-	    <input type="text" id="nome" placeholder="Nome" required>
-	    <input type="text" id="cmc" placeholder="CMC" required>
-	    <input type="text" id="cor" placeholder="Cor" required>
-	    <input type="text" id="tipo" placeholder="Tipo" required>
-	    <input type="text" id="texto" placeholder="Texto" required>
-	    <input type="number" id="poder" placeholder="Poder" required>
-	    <input type="number" id="resistencia" placeholder="Resistência" required>
-	
-	    <button type="submit">Cadastrar Carta</button>
-	</form>
-
-	<div id="card-container">
-		
-	</div>
-</section>
+<form id="cartaForm">
+    <input type="hidden" id="id">
+    <input type="text" id="nome" placeholder="Nome" required>
+    <input type="text" id="cmc" placeholder="CMC" required>
+    <input type="text" id="cor" placeholder="Cor" required>
+    <input type="text" id="tipo" placeholder="Tipo" required>
+    <input type="text" id="texto" placeholder="Texto" required>
+    <input type="number" id="poder" placeholder="Poder" required>
+    <input type="number" id="resistencia" placeholder="Resistência" required>
+    <button type="submit">Cadastrar Carta</button>
+</form>
 
 <hr>
 
 <h2>Cartas Registradas</h2>
-<div id="listaCartas">
-	
+<ul id="listaCartas"></ul>
+
+<div>
+    <label for="buscarNome">Buscar Carta:</label>
+    <input type="text" id="buscarNome" placeholder="Digite o nome da carta">
 </div>
+
+<div id="card-container"></div>
+
 <script src="script.js"></script>
+
 </body>
 </html>
