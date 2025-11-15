@@ -29,6 +29,11 @@ public class registradorController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/buscar")
+    public List<Carta> buscarPorNome(@RequestParam String nome) {
+        return service.buscarPorNome(nome);
+    }
+
     @PostMapping
     public ResponseEntity<Carta> criar(@RequestBody Carta carta) {
         Carta salva = service.salvar(carta);
