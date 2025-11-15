@@ -5,36 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrador de Cartas MTG</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="script.js"></script>
 </head>
 <body>
 
 <h1>Registrador de Cartas MTG</h1>
 
-<form id="cartaForm">
-    <input type="hidden" id="id">
-    <input type="text" id="nome" placeholder="Nome" required>
-    <input type="text" id="cmc" placeholder="CMC" required>
-    <input type="text" id="cor" placeholder="Cor" required>
-    <input type="text" id="tipo" placeholder="Tipo" required>
-    <input type="text" id="texto" placeholder="Texto" required>
-    <input type="number" id="poder" placeholder="Poder" required>
-    <input type="number" id="resistencia" placeholder="Resistência" required>
-    <button type="submit">Cadastrar Carta</button>
-</form>
+<section class="main-container">
+	<form id="cartaForm">
+	    <input type="hidden" id="id">
+	    <input type="text" id="nome" placeholder="Nome" required>
+	    <input type="text" id="cmc" placeholder="CMC" required>
+	    <input type="text" id="cor" placeholder="Cor" required>
+	    <input type="text" id="tipo" placeholder="Tipo" required>
+	    <input type="text" id="texto" placeholder="Texto" required>
+	    <input type="number" id="poder" placeholder="Poder" required>
+	    <input type="number" id="resistencia" placeholder="Resistência" required>
+	    <button type="submit">Cadastrar Carta</button>
+	</form>
+	
+	<div id="card-container"></div>
+</section>
 
-<hr>
-
-<h2>Cartas Registradas</h2>
-<ul id="listaCartas"></ul>
-
-<div>
-    <label for="buscarNome">Buscar Carta:</label>
-    <input type="text" id="buscarNome" placeholder="Digite o nome da carta">
-</div>
-
-<div id="card-container"></div>
-
-<script src="script.js"></script>
+<section>
+	<h2>Cartas Registradas</h2>
+	<div class="search-container">
+	    <label for="buscarNome">Buscar Carta:</label>
+	    <input type="text" id="buscarNome" placeholder="Digite o nome da carta">
+	</div>
+	<hr>
+	<div id="listaCartas"></div>
+</section>
 
 </body>
 </html>

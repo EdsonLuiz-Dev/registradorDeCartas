@@ -1,14 +1,29 @@
-const API_URL = "http://localhost:8080/cartas";
+document.addEventListener("DOMContentLoaded", function() {
+    const API_URL = "http://localhost:8080/cartas";
+    const form = document.getElementById("cartaForm");
+    const submitBtn = form.querySelector("button[type='submit']");
 
-document.addEventListener("DOMContentLoaded", carregarCartas);
+    const removeBtn = document.createElement("button");
+    removeBtn.type = "button";
+    removeBtn.textContent = "Remover Carta";
+    removeBtn.style.display = "none";
+    removeBtn.style.marginLeft = "10px";
+    form.appendChild(removeBtn);
 
-function carregarCartas() {
-    fetch(API_URL)
-        .then(res => res.json())
-        .then(cartas => {
-            const lista = document.getElementById("listaCartas");
-            lista.innerHTML = "";
+    carregarCartas();
 
+    function carregarCartas() {
+        fetch(API_URL)
+            .then(res => res.json())
+            .then(cartas => renderLista(cartas))
+            .catch(err => console.error("Erro ao carregar cartas:", err));
+    }
+
+    function renderLista(cartas) {
+        const lista = document.getElementById("listaCartas");
+        lista.innerHTML = "";
+
+        if (cartas.length > 0) {
             cartas.forEach(c => {
                 const btn = document.createElement("button");
                 btn.textContent = `${c.nome} (${c.cor}) - ${c.poder}/${c.resistencia}`;
@@ -18,125 +33,135 @@ function carregarCartas() {
 
                 lista.appendChild(btn);
             });
-        })
-        .catch(err => console.error("Erro ao carregar cartas:", err));
-}
-
-function mostrarCarta(carta) {
-    const container = document.getElementById("card-container");
-    container.innerHTML = `
-        <div class="card">
-            <h3>${carta.nome}</h3>
-            <p><strong>CMC:</strong> ${carta.cmc}</p>
-            <p><strong>Cor:</strong> ${carta.cor}</p>
-            <p><strong>Tipo:</strong> ${carta.tipo}</p>
-            <p><strong>Texto:</strong> ${carta.texto}</p>
-            <p><strong>Poder/Resistência:</strong> ${carta.poder}/${carta.resistencia}</p>
-        </div>
-    `;
-
-    document.getElementById("id").value = carta.id;
-    document.getElementById("nome").value = carta.nome;
-    document.getElementById("cmc").value = carta.cmc;
-    document.getElementById("cor").value = carta.cor;
-    document.getElementById("tipo").value = carta.tipo;
-    document.getElementById("texto").value = carta.texto;
-    document.getElementById("poder").value = carta.poder;
-    document.getElementById("resistencia").value = carta.resistencia;
-
-    const btn = document.querySelector("button[type='submit']");
-    btn.textContent = "Editar Carta";
-    btn.onclick = (event) => {
-        event.preventDefault();
-        editarCarta(carta.id, container);
-    };
-}
-
-function editarCarta(id, container) {
-    const cartaAtualizada = {
-        nome: document.getElementById("nome").value,
-        cmc: document.getElementById("cmc").value,
-        cor: document.getElementById("cor").value,
-        tipo: document.getElementById("tipo").value,
-        texto: document.getElementById("texto").value,
-        poder: parseInt(document.getElementById("poder").value),
-        resistencia: parseInt(document.getElementById("resistencia").value)
-    };
-
-    fetch(`${API_URL}/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(cartaAtualizada)
-    })
-    .then(() => {
-        alert("Carta atualizada com sucesso!");
-        mostrarCarta(cartaAtualizada);
-        document.getElementById("cartaForm").reset();
-        carregarCartas();
-    })
-    .catch(err => console.error("Erro ao editar carta:", err));
-}
-
-document.getElementById("buscarNome").addEventListener("input", buscarCartaPorNome);
-
-function buscarCartaPorNome() {
-    const nomeBusca = document.getElementById("buscarNome").value.toLowerCase().trim();
-    
-    if (!nomeBusca) {
-        carregarCartas();
-        return;
+        } else {
+            lista.innerHTML = "<p>Nenhuma carta encontrada.</p>";
+        }
     }
 
-    fetch(`${API_URL}/buscar?nome=${nomeBusca}`)
-        .then(res => res.json())
-        .then(cartas => {
-            const lista = document.getElementById("listaCartas");
-            lista.innerHTML = "";
+    function mostrarCarta(carta) {
+        const container = document.getElementById("card-container");
+        container.innerHTML = `
+            <div class="card">
+                <h3>${carta.nome}</h3>
+                <p><strong>CMC:</strong> ${carta.cmc}</p>
+                <p><strong>Cor:</strong> ${carta.cor}</p>
+                <p><strong>Tipo:</strong> ${carta.tipo}</p>
+                <p><strong>Texto:</strong> ${carta.texto}</p>
+                <p><strong>Poder/Resistência:</strong> ${carta.poder}/${carta.resistencia}</p>
+            </div>
+        `;
 
-            if (cartas.length > 0) {
-                cartas.forEach(c => {
-                    const btn = document.createElement("button");
-                    btn.textContent = `${c.nome} (${c.cor}) - ${c.poder}/${c.resistencia}`;
-                    btn.classList.add("card-button");
+        form.id.value = carta.id;
+        form.nome.value = carta.nome;
+        form.cmc.value = carta.cmc;
+        form.cor.value = carta.cor;
+        form.tipo.value = carta.tipo;
+        form.texto.value = carta.texto;
+        form.poder.value = carta.poder;
+        form.resistencia.value = carta.resistencia;
 
-                    btn.addEventListener("click", () => mostrarCarta(c));
+        submitBtn.textContent = "Editar Carta";
+        removeBtn.style.display = "inline-block";
+    }
 
-                    lista.appendChild(btn);
-                });
-            } else {
-                lista.innerHTML = "<p>Nenhuma carta encontrada.</p>";
-            }
-        })
-        .catch(err => console.error("Erro ao buscar cartas:", err));
-}
+    function limparFormulario() {
+        form.reset();
+        form.id.value = "";
+        document.getElementById("card-container").innerHTML = "";
+        submitBtn.textContent = "Cadastrar Carta";
+        removeBtn.style.display = "none";
+    }
 
-document.getElementById("cartaForm").addEventListener("submit", function(event) {
-    event.preventDefault();
-
-    const id = document.getElementById("id").value;
-    if (id) {
-        editarCarta(id);
-    } else {
-        const novaCarta = {
-            nome: document.getElementById("nome").value,
-            cmc: document.getElementById("cmc").value,
-            cor: document.getElementById("cor").value,
-            tipo: document.getElementById("tipo").value,
-            texto: document.getElementById("texto").value,
-            poder: parseInt(document.getElementById("poder").value),
-            resistencia: parseInt(document.getElementById("resistencia").value)
+    function editarCarta(id) {
+        const cartaAtualizada = {
+            nome: form.nome.value,
+            cmc: form.cmc.value,
+            cor: form.cor.value,
+            tipo: form.tipo.value,
+            texto: form.texto.value,
+            poder: parseInt(form.poder.value),
+            resistencia: parseInt(form.resistencia.value)
         };
 
-        fetch(API_URL, {
-            method: "POST",
+        fetch(`${API_URL}/${id}`, {
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(novaCarta)
+            body: JSON.stringify(cartaAtualizada)
         })
         .then(() => {
-            alert("Carta registrada!");
-            this.reset();
+            alert("Carta atualizada com sucesso!");
+            limparFormulario();
             carregarCartas();
         })
-        .catch(err => console.error("Erro ao cadastrar carta:", err));
+        .catch(err => console.error("Erro ao editar carta:", err));
     }
+
+    removeBtn.addEventListener("click", function() {
+        const id = form.id.value;
+        if (!id) return;
+
+        if (confirm("Tem certeza que deseja remover esta carta?")) {
+            fetch(`${API_URL}/${id}`, { method: "DELETE" })
+                .then(() => {
+                    alert("Carta removida com sucesso!");
+                    limparFormulario();
+                    carregarCartas();
+                })
+                .catch(err => console.error("Erro ao remover carta:", err));
+        }
+    });
+
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const id = form.id.value;
+
+        if (id) {
+            editarCarta(id);
+        } else {
+            const novaCarta = {
+                nome: form.nome.value,
+                cmc: form.cmc.value,
+                cor: form.cor.value,
+                tipo: form.tipo.value,
+                texto: form.texto.value,
+                poder: parseInt(form.poder.value),
+                resistencia: parseInt(form.resistencia.value)
+            };
+
+            fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(novaCarta)
+            })
+            .then(() => {
+                alert("Carta registrada!");
+                limparFormulario();
+                carregarCartas();
+            })
+            .catch(err => console.error("Erro ao cadastrar carta:", err));
+        }
+    });
+
+    document.getElementById("buscarNome").addEventListener("input", function() {
+        const nomeBusca = this.value.toLowerCase().trim();
+
+        if (!nomeBusca) {
+            carregarCartas();
+            return;
+        }
+
+        fetch(`${API_URL}/buscar?nome=${nomeBusca}`)
+            .then(res => res.json())
+            .then(cartas => renderLista(cartas))
+            .catch(err => console.error("Erro ao buscar cartas:", err));
+    });
+
+    document.addEventListener("click", function(e) {
+        const container = document.getElementById("card-container");
+        const lista = document.getElementById("listaCartas");
+        if (!container.contains(e.target) && !lista.contains(e.target) && !form.contains(e.target)) {
+            limparFormulario();
+        }
+    });
 });
