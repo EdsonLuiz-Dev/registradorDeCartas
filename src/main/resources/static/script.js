@@ -11,14 +11,37 @@ function carregarCartas() {
             lista.innerHTML = "";
 
             cartas.forEach(c => {
-                const item = document.createElement("li");
-                item.textContent = `${c.nome} (${c.cor}) - ${c.poder}/${c.resistencia}`;
-                lista.appendChild(item);
+                // Create a button instead of li
+                const btn = document.createElement("button");
+                btn.textContent = `${c.nome} (${c.cor}) - ${c.poder}/${c.resistencia}`;
+                btn.classList.add("card-button");
+
+                // Add click event to show card details
+                btn.addEventListener("click", () => mostrarCarta(c));
+
+                lista.appendChild(btn);
             });
-        });
+        })
+        .catch(err => console.error("Erro ao carregar cartas:", err));
 }
 
-document.getElementById("cartaForm").addEventListener("submit", function (event) {
+// Function to show card info in card-container
+function mostrarCarta(carta) {
+    const container = document.getElementById("card-container");
+    container.innerHTML = `
+        <div class="card">
+            <h3>${carta.nome}</h3>
+            <p><strong>CMC:</strong> ${carta.cmc}</p>
+            <p><strong>Cor:</strong> ${carta.cor}</p>
+            <p><strong>Tipo:</strong> ${carta.tipo}</p>
+            <p><strong>Texto:</strong> ${carta.texto}</p>
+            <p><strong>Poder/Resistência:</strong> ${carta.poder}/${carta.resistencia}</p>
+        </div>
+    `;
+}
+
+// Handle form submission
+document.getElementById("cartaForm").addEventListener("submit", function(event) {
     event.preventDefault();
 
     const novaCarta = {
@@ -36,9 +59,10 @@ document.getElementById("cartaForm").addEventListener("submit", function (event)
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(novaCarta)
     })
-        .then(() => {
-            alert("Carta registrada!");
-            this.reset();
-            carregarCartas();
-        });
+    .then(() => {
+        alert("Carta registrada!");
+        this.reset();
+        carregarCartas();
+    })
+    .catch(err => console.error("Erro ao cadastrar carta:", err));
 });
